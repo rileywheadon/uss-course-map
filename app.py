@@ -58,20 +58,18 @@ def build_links(courses):
     return links
 
 
-def generateGraph(filename):
-
-    with open(f'data/{filename}') as f:
-        courses = json.load(f)
-
-    links = build_links(courses)
+def generateGraph(courseData):
+    links = build_links(courseData)
 
     # Convert links to DOT format
     dot_links = []
     for link in links:
+        source = f"{link['source'][:4]}\n{link['source'][4:]}"
+        target = f"{link['target'][:4]}\n{link['target'][4:]}"
         if link['type'] == 'coreq':
-            dot_links.append(f'  "{link["target"]}" -> "{link["source"]}" [style=dashed color="gray80"];')
+            dot_links.append(f'"{target}" -> "{source}" [style=dashed color="gray95"]; ')
         else:
-            dot_links.append(f'  "{link["target"]}" -> "{link["source"]}" [color="gray80"];')
+            dot_links.append(f'"{target}" -> "{source}" [color="gray95"]; ')
 
     links_str = '\n'.join(dot_links)
 
@@ -79,16 +77,26 @@ def generateGraph(filename):
         outputorder="edgesfirst";
         rankdir="BT";
         splines="line";
-        node [style=filled fillcolor=gray90];
+        node [style=filled fillcolor="#f2f2f2"];
+        edge [penwidth=1];
         {links_str}
     }}
     """
 
+
+def loadData(filename):
+    with open(f'data/{filename}') as f:
+        courses = json.load(f)
+
+    return courses
+
+
 @app.route('/')
 def index():
-    courseGraph = generateGraph("courses.json")
-    courseMap = subprocess.check_output(['dot', '-Tsvg'], input=courseGraph.encode()).decode('utf-8')
-    return render_template('index.html', courseMap=courseMap)
+    courseData = loadData("courses.json")
+    courseGraph = generateGraph(courseData)
+    courseMap = subprocess.check_output(['dot', '-Tsvg_inline'], input=courseGraph.encode()).decode('utf-8')
+    return render_template("index.html", courseMap=courseMap, courseData=courseData)
 
 if __name__ == '__main__':
     app.run(debug=True)

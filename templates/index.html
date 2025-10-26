@@ -4,11 +4,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/main.js" defer></script>
   <title>USS STAT Courses</title>
 </head>
 
 <body>
-  {{ courseMap | safe }}
+  <h1>USS Course Map</h1>
+  <div class="container">
+    <div class="container-map">
+      {{ courseMap | safe }}
+    </div>
+    <div class="container-info">
+      <h2>Course Information</h2>
+      <p>Click on a course to see more details about it.</p>
+      <ul>
+        <li><strong>Solid lines</strong>: Prerequisites</li>
+        <li><strong>Dashed lines</strong>: Corequisites</li>
+      </ul>
+      {% for course in courseData %}
+        <div class="course-details" id="{{ course.code }}">
+          <h3>{{ course.code }}: {{ course.title }}</h3>
+          <p>{{ course.description }}</p>
+          <p><strong>Credits:</strong> {{ course.credits }}</p>
+          <p><strong>Hours:</strong> {{ course.hours }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 </body>
 
 </html>
