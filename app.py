@@ -95,7 +95,7 @@ def loadData(filename):
 def index():
     courseData = loadData("courses.json")
     courseGraph = generateGraph(courseData)
-    courseMap = subprocess.check_output(['dot', '-Tsvg_inline'], input=courseGraph.encode()).decode('utf-8')
+    courseMap = subprocess.check_output(['dot', '-Tsvg'], input=courseGraph.encode()).decode('utf-8')
     return render_template("index.html", courseMap=courseMap, courseData=courseData)
 
 if __name__ == '__main__':
