@@ -1,14 +1,45 @@
 # Course Map Design
 
-Details: https://en.wikipedia.org/wiki/Layered_graph_drawing
+## Tasks
+
+### MVP (Minimum Viable Product)
+
+- Must work properly on mobile and desktop
+- Highlight courses when clicked (desktop only)
+- Add license (CC NonCommerical-ShareAlike4.0)
+
+ Suggestions from other USS teammates:
+
+- Highlight the entire path required to take the course
+- Add an indicator for old courses (STAT307, STAT308, STAT445)
+	
+### Additional Goals
+
+Add links to UBCGrades:
+
+- Add an additional field to the `courses.json` file
+- Include the link in the course popup
+
+Include prerequisite courses from other departments:
+
+- Extend `courses.json` to include all prerequisites of the statistics courses
+- Add a toggle to the course map to show non-STAT prerequisites
+
+Display required/optional courses for all statistics programs:
+
+- Create a new `programs.json` file that lists the requirements for [all programs](https://vancouver.calendar.ubc.ca/faculties-colleges-and-schools/faculty-science/bachelor-science/statistics)
+- Add a menu to the course map that allows user to highlight program requirements
+- See the [UBC Mathematics Course Map](https://ubcmath.github.io/coursemap/) for inspiration
 
 ## Architecture
 
-Web server: Flask
+- Web server: Flask
+- Graph drawing: https://en.wikipedia.org/wiki/Layered_graph_drawing
+- Graphviz documentation: https://graphviz.org/docs/layouts/dot/
 
 General idea:
 
-- User loads home page, sends HTTP request to Flask web server.
+- User loads home page, sends HTTP request to Flask web server
 - `/` endpoint makes the following calls: 
   - `generateGraph` which generates a graphviz dot file using `buildLinks`
   - `buildLinks`, which generates a list of links (source, target, type)
@@ -23,21 +54,3 @@ General idea:
   - For basic hover effects in the SVG
   - For styling the sidebar containing course details
 
-## Link-Building Algorithm 
-
-- Load the `courses.json` file.
-- Flatten the prerequisites/corequisites for each course in `getDependencies`.
-  - For now, only include any courses that start with the four characters `"STAT"`.
-  - Maintain information about whether the dependency is a prerequisite or corequisite.
-- Create a list of links between courses (2-course tuples, prerequisite goes first).
-
-Example: 
-
-```js
-links = [
-  {"source": "STAT200", "target": "STAT305", "type": "prereq"}, 
-  {"source": "STAT201", "target": "STAT301", "type": "prereq"}
-  {"source": "STAT305", "target": "STAT321", "type": "coreq"}
-  ...
-]
-```
