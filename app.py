@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import subprocess
 import json
 
+
 app = Flask(__name__)
 
 
@@ -88,6 +89,11 @@ def loadData(filename):
     with open(f'data/{filename}') as f:
         courses = json.load(f)
 
+    for course in courses:
+        num = course["code"][4:]
+        course ["grades_url"] = f"https://ubcgrades.com/statistics-by-course#UBCV-STAT-{num}"
+           
+        
     return courses
 
 
