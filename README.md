@@ -1,5 +1,7 @@
 # Course Map Design
 
+## Development
+
 To run the app locally, execute the following commands in a terminal:
 
 ```bash
@@ -10,6 +12,20 @@ python app.py
 ```
 
 Then, go to https://localhost:5000 to preview the application.
+
+## Contributing
+
+This repository has protections on the master branch.
+
+Therefore, you will need to make any modifications on a branch and then put up a PR for review:
+
+```bash
+# To create a branch:
+git checkout -b $BRANCH_NAME
+```
+
+You can create a pull request from the [Github Repository](https://github.com/rileywheadon/uss-course-map). 
+For an example, see [uss-course-map #1](https://github.com/rileywheadon/uss-course-map/pull/1)
 
 ## Tasks
 
@@ -56,12 +72,12 @@ General idea:
   - `buildLinks`, which generates a list of links (source, target, type)
   - `getDependencies` is used by `buildLinks` to get dependencies from `courses.json`
   - Then, it executes `dot -Tsvg` and injects the resulting SVG into the response
-- We need a Javascript file `main.js` that does the following:
+- We have a Javascript file `main.js` that does the following:
   - On click, highlights the selected node and all prerequisite edges/nodes
   - Also fades out all other nodes to make it easier to focus
   - Unhides the sidebar and unhides the details for the selected course
-  - When the user clicks off the course, it should go back to the default view
-- Also add a CSS file `styles.css`: 
+  - When the user clicks off the course, it goes back to the default view
+- We also have a CSS file `styles.css`: 
   - For basic hover effects in the SVG
   - For styling the sidebar containing course details
 
