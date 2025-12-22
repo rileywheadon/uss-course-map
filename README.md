@@ -8,7 +8,7 @@ To run the app locally, execute the following commands in a terminal:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate # or source .venv\Scripts\activate in Powershell
 pip install -r requirements.txt
 python app.py
 ```
