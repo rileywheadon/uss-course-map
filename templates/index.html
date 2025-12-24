@@ -36,6 +36,14 @@
             </div>
             {% endfor %}
         </div>
+        <div id="program-buttons" data-programs='{{ programs | tojson }}'>
+            {% for program in programs %}
+                <button class="program-button" data-program="{{ program.program }}">
+                    {{program.program}}
+                </button>
+            {% endfor %}
+
+        </div>
     </div>
 </body>
 
