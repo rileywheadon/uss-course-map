@@ -1,4 +1,5 @@
 function setActiveNode(nodes, node) {
+    document.getElementById("viewing-title")?.style.setProperty("display", "none");
 
     // Get the course code from the node's title element
     const titleElement = node.querySelector('title');
@@ -63,7 +64,7 @@ function highlightPrerequisites(node, codeSet) {
     let courseCode = titleElement.textContent.replace(/\s+/g, '');
 
      // Make the selected node green
-    node.querySelector('ellipse').setAttribute('fill', 'lightgreen');
+    node.querySelector('ellipse').setAttribute('fill', 'yellow');
     
     // Highlight incoming edges (arrows pointing TO this node)
     const edges = document.querySelectorAll('.edge');
@@ -79,7 +80,7 @@ function highlightPrerequisites(node, codeSet) {
         const src = parts[0]; 
         const dst = parts[1];  
 
-        // Get edges that point TO our selected node
+        // Get edges that point TO our selected node AND are a prerequisite
         if (dst === courseCode && codeSet.has(src)) {
             edgePath.setAttribute('stroke', 'black');
             edgePolygon.setAttribute('stroke', 'black');
@@ -92,8 +93,16 @@ function highlightPrerequisites(node, codeSet) {
 document.querySelectorAll(".program-button").forEach(btn => {
     btn.addEventListener("click", () => {
         const programName = btn.dataset.program;
-
+        let h = document.getElementById("viewing-title");
+        if (!h) {
+            h = document.createElement("h3");
+            h.id = "viewing-title";
+            document.getElementById("program-buttons").before(h);
+        }
+        h.textContent = `You are viewing: ${btn.dataset.program} requirements`;
         const nodes = document.querySelectorAll('.node');
+
+        document.getElementById("viewing-title")?.style.setProperty("display", "block");
 
         // Reset all edges to default color
         const allEdges = document.querySelectorAll('g.edge');
