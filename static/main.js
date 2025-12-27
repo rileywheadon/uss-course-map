@@ -1,4 +1,5 @@
 function setActiveNode(nodes, node) {
+    document.getElementById("viewing-title")?.style.setProperty("display", "none");
 
     // Get the course code from the node's title element
     const titleElement = node.querySelector('title');
@@ -50,11 +51,104 @@ function setActiveNode(nodes, node) {
         } else {
             edgePath.setAttribute('stroke', '#f2f2f2');
             edgePolygon.setAttribute('stroke', '#f2f2f2');
-            edgePolygon.setAttribute('fill', '#f2f2f2');
+            edgePolygon.setAttribute('fill', '#f2f2f2');    
         }
     });
 
 }
+
+function highlightPrerequisites(node, codeSet) {
+    const titleElement = node.querySelector('title');
+
+    // Extract course code (remove newlines and spaces)
+    let courseCode = titleElement.textContent.replace(/\s+/g, '');
+
+     // Make the selected node green
+    node.querySelector('ellipse').setAttribute('fill', 'yellow');
+    
+    // Highlight incoming edges (arrows pointing TO this node)
+    const edges = document.querySelectorAll('.edge');
+    edges.forEach(edge => {
+
+        const edgeTitle = edge.querySelector('title');
+        const edgeText = edgeTitle.textContent.replace(/\s+/g, '');
+                
+        const edgePath = edge.querySelector('path');
+        const edgePolygon = edge.querySelector('polygon'); 
+        const parts = edgeText.split("->");
+
+        const src = parts[0]; 
+        const dst = parts[1];  
+
+        // Get edges that point TO our selected node AND are a prerequisite
+        if (dst === courseCode && codeSet.has(src)) {
+            edgePath.setAttribute('stroke', 'black');
+            edgePolygon.setAttribute('stroke', 'black');
+            edgePolygon.setAttribute('fill', 'black');
+        }
+    });
+
+}
+
+document.querySelectorAll(".program-button").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const programName = btn.dataset.program;
+        let h = document.getElementById("viewing-title");
+        if (!h) {
+            h = document.createElement("h3");
+            h.id = "viewing-title";
+            document.getElementById("program-buttons").before(h);
+        }
+        h.textContent = `You are viewing: ${btn.dataset.program} requirements`;
+        const nodes = document.querySelectorAll('.node');
+
+        document.getElementById("viewing-title")?.style.setProperty("display", "block");
+
+        // Reset all edges to default color
+        const allEdges = document.querySelectorAll('g.edge');
+            allEdges.forEach(edge => {
+            const edgePath = edge.querySelector('path');
+            if (edgePath) edgePath.setAttribute('stroke', "gray85");
+        });
+
+
+        // Reset all edge polygons
+        allEdges.forEach(edge => {
+            const edgePolygon = edge.querySelector('polygon');
+            if (edgePolygon) {
+                edgePolygon.setAttribute('stroke', '#f2f2f2');
+                edgePolygon.setAttribute('fill', '#f2f2f2');
+            }
+        });
+
+        // Reset all nodes to default color
+        nodes.forEach(otherNode => {
+            otherNode.querySelector('ellipse').setAttribute('fill', '#f2f2f2');
+        });
+
+
+        const data = JSON.parse(
+        document.getElementById("program-buttons").dataset.programs
+        );
+
+        const selected = data.find(p => p.program === programName);
+        const stats_requirements = selected.stats_requirements;
+        const codeSet = new Set();
+        for (const item of stats_requirements) {
+            codeSet.add(item.code);
+        }
+
+        nodes.forEach(node => {
+            const titleElement = node.querySelector('title');
+            let courseCode = titleElement.textContent.replace(/\s+/g, '');
+
+            if (codeSet.has(courseCode)) {
+                highlightPrerequisites(node,codeSet);
+            }
+        });
+    });
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
 

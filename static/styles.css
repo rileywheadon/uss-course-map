@@ -11,6 +11,39 @@
     grid-template-rows: 1fr auto;
   }
 }
+.container{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.container > h2,
+#program-buttons{
+  width: 100%;
+}
+
+#program-buttons{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.container-map{
+  flex: 1 1 600px;  
+}
+
+.container-info{
+  flex: 0 0 360px;
+}
+
+/* mobile: stack */
+@media (max-width: 700px){
+  .container-map,
+  .container-info{
+    flex: 1 1 100%;
+  }
+}
+
+
 
 .container-map {
   width: 100%;

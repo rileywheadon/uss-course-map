@@ -96,13 +96,20 @@ def loadData(filename):
         
     return courses
 
+def loadPrograms(filename):
+    with open(f'data/{filename}') as f:
+        programs = json.load(f)
+
+    return programs
+
 
 @app.route('/')
 def index():
     courseData = loadData("courses.json")
     courseGraph = generateGraph(courseData)
     courseMap = subprocess.check_output(['dot', '-Tsvg'], input=courseGraph.encode()).decode('utf-8')
-    return render_template("index.html", courseMap=courseMap, courseData=courseData)
+    programs = loadPrograms('programs.json')
+    return render_template("index.html", courseMap=courseMap, courseData=courseData, programs=programs)
 
 if __name__ == '__main__':
     app.run(debug=True)

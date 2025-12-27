@@ -12,6 +12,14 @@
 <body>
     <h1>USS Course Map</h1>
     <div class="container">
+        <h2>View Program Specific Requirements:</h2>
+        <div id="program-buttons" data-programs='{{ programs | tojson }}'>
+            {% for program in programs %}
+                <button class="program-button" data-program="{{ program.program }}">
+                    {{program.program}}
+                </button>
+            {% endfor %}
+        </div>
         <div class="container-map">
             {{ courseMap | safe }}
         </div>
@@ -21,6 +29,8 @@
             <ul>
                 <li><strong>Solid lines</strong>: Prerequisites</li>
                 <li><strong>Dashed lines</strong>: Corequisites</li>
+                <li><strong>Yellow Nodes</strong>: Required courses for selected major</li>
+                <li><strong>Green Node</strong>: Selected node</li>
             </ul>
             {% for course in courseData %}
             <div class="course-details" id="{{ course.code }}">
@@ -36,6 +46,7 @@
             </div>
             {% endfor %}
         </div>
+
     </div>
 </body>
 
