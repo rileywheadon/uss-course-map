@@ -63,13 +63,12 @@ function highlightPrerequisites(node, codeSet) {
     // Extract course code (remove newlines and spaces)
     let courseCode = titleElement.textContent.replace(/\s+/g, '');
 
-     // Make the selected node green
-    node.querySelector('ellipse').setAttribute('fill', 'yellow');
-    
+    // Make the selected node blue
+    node.querySelector('ellipse').setAttribute('fill', '#bfdbfe');
+
     // Highlight incoming edges (arrows pointing TO this node)
     const edges = document.querySelectorAll('.edge');
     edges.forEach(edge => {
-
         const edgeTitle = edge.querySelector('title');
         const edgeText = edgeTitle.textContent.replace(/\s+/g, '');
                 
@@ -85,7 +84,7 @@ function highlightPrerequisites(node, codeSet) {
             edgePath.setAttribute('stroke', 'black');
             edgePolygon.setAttribute('stroke', 'black');
             edgePolygon.setAttribute('fill', 'black');
-        }
+        }     
     });
 
 }
@@ -93,16 +92,7 @@ function highlightPrerequisites(node, codeSet) {
 document.querySelectorAll(".program-button").forEach(btn => {
     btn.addEventListener("click", () => {
         const programName = btn.dataset.program;
-        let h = document.getElementById("viewing-title");
-        if (!h) {
-            h = document.createElement("h3");
-            h.id = "viewing-title";
-            document.getElementById("program-buttons").before(h);
-        }
-        h.textContent = `You are viewing: ${btn.dataset.program} requirements`;
         const nodes = document.querySelectorAll('.node');
-
-        document.getElementById("viewing-title")?.style.setProperty("display", "block");
 
         // Reset all edges to default color
         const allEdges = document.querySelectorAll('g.edge');
@@ -115,7 +105,9 @@ document.querySelectorAll(".program-button").forEach(btn => {
         // Reset all edge polygons
         allEdges.forEach(edge => {
             const edgePolygon = edge.querySelector('polygon');
+            const edgePath = edge.querySelector('path');
             if (edgePolygon) {
+                edgePath.setAttribute('stroke', '#f2f2f2');
                 edgePolygon.setAttribute('stroke', '#f2f2f2');
                 edgePolygon.setAttribute('fill', '#f2f2f2');
             }
@@ -155,9 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get all node elements in the SVG
     const nodes = document.querySelectorAll('.node');
     
+    // Set default styles on each node
     nodes.forEach(node => {
         node.addEventListener('click', () => setActiveNode(nodes, node));
         node.style.cursor = 'pointer';
+
+        const ellipse = node.querySelector('ellipse');
+        ellipse.setAttribute('stroke', '#111827');
+        ellipse.setAttribute('stroke-width', '0.75');
+
+        const textElements = node.querySelectorAll('text');
+        textElements.forEach(text => {
+            text.setAttribute('font-size', '13.00');
+        })
     });
 
 });

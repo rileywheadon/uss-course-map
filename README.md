@@ -28,7 +28,7 @@ git checkout -b $BRANCH_NAME
 
 You can create a pull request from the [Github Repository](https://github.com/rileywheadon/uss-course-map). 
 For an example, see [uss-course-map #1](https://github.com/rileywheadon/uss-course-map/pull/1)
-After you create a PR, ping me (Riley) in the #tech-team chat on Discord and I will review.
+After you create a PR, ping the #tech-team chat on Discord and someone will review.
 
 ## Tasks
 
