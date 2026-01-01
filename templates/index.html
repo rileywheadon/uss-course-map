@@ -2,52 +2,91 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styles.css">
-    <script src="/static/main.js" defer></script>
-    <title>USS STAT Courses</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>USS STAT Courses</title>
+
+	<!-- Tailwind CSS and Alpine.js CDN -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+	<!-- Local JS -->
+	<script src="/static/main.js" defer></script>
 </head>
 
-<body>
-    <h1>USS Course Map</h1>
-    <div class="container">
-        <h2>View Program Specific Requirements:</h2>
-        <div id="program-buttons" data-programs='{{ programs | tojson }}'>
-            {% for program in programs %}
-                <button class="program-button" data-program="{{ program.program }}">
-                    {{program.program}}
-                </button>
-            {% endfor %}
-        </div>
-        <div class="container-map">
-            {{ courseMap | safe }}
-        </div>
-        <div class="container-info">
-            <h2>Course Information</h2>
-            <p>Click on a course to see more details about it.</p>
-            <ul>
-                <li><strong>Solid lines</strong>: Prerequisites</li>
-                <li><strong>Dashed lines</strong>: Corequisites</li>
-                <li><strong>Yellow Nodes</strong>: Required courses for selected major</li>
-                <li><strong>Green Node</strong>: Selected node</li>
-            </ul>
-            {% for course in courseData %}
-            <div class="course-details" id="{{ course.code }}">
-                <h3>{{ course.code }}: {{ course.title }}</h3>
-                <p>{{ course.description }}</p>
-                <p><strong>Credits:</strong> {{ course.credits }}</p>
-                <p><strong>Hours:</strong> {{ course.hours }}</p>
-                <p>
-                    <a href="{{ course.grades_url }}" target="_blank" rel="noopener noreferrer">
-                        View Historical Averages for {{ course.code }}
-                    </a>
-                </p>
-            </div>
-            {% endfor %}
-        </div>
+<body class="p-4 bg-gray-50 w-full min-h-screen md:max-h-screen flex flex-col gap-y-4">
 
-    </div>
+	<!-- Title and Subtitle -->
+	<div>
+		<h1 class="text-gray-900 text-3xl font-bold mb">UBC Statistics Course Map</h1>
+		<h2 class="text-gray-800 text-md">
+			Built by the 
+			<a class="text-blue-700 underline" href="https://ubcuss.ca/">UBC Undergraduate Statistics Society</a>
+		</h2>
+	</div>
+
+	<!-- Program selection buttons styled with TailwindCSS and Alpine.js -->
+	<div 
+		id="program-buttons" 
+		x-data="{ activeProgram: null }"
+		data-programs='{{ programs | tojson }}' 
+		class="flex flex-col md:block"
+	>
+		{% for program in programs %}
+			<div 
+				class="rounded-full py-1 px-4 mx-[0.5] my-1 inline-block text-sm cursor-pointer program-button"
+				data-program="{{ program.program }}"
+				:class="activeProgram === '{{ program.program }}' ? 'bg-blue-800 text-white' : 'hover:bg-blue-300 bg-blue-200 text-gray-900'"
+				@click="activeProgram = '{{ program.program }}'"
+			>
+				{{program.program}}
+			</div>
+		{% endfor %}
+	</div>
+
+	<!-- Course Map and Information Section -->
+	<div class="md:grid md:grid-cols-3 gap-x-4 flex-1 min-w-0 min-h-0">
+
+		<!-- Course Map SVG generated in app.py -->
+		<div class="rounded-lg border border-gray-900 col-span-2 flex-row bg-white overflow-auto h-full p-2">
+			{{ courseMap | safe }}
+		</div>
+
+		<div class="col-span-1 overflow-auto">
+
+			<!-- Course Information Legend (hidden on mobile)-->
+			<div class="hidden md:block">
+				<h2 class="text-lg font-bold mb text-gray-900">Course Information Legend</h2>
+				<ul class="list-disc pl-6 my-2">
+					<li><strong>Solid lines</strong>: Prerequisites</li>
+					<li><strong>Dashed lines</strong>: Corequisites</li>
+					<li><strong>Blue courses</strong>: Required for selected program</li>
+				</ul>
+			</div>
+
+			<!-- List of Course Descriptions -->
+			{% for course in courseData %}
+			<div class="course-details mt-4 hidden" id="{{ course.code }}">
+				<h2 class="text-lg font-bold text-gray-900">{{ course.code }}: {{ course.title }}</h3>
+				<p>{{ course.description }}</p>
+				<ul class="list-disc pl-6 my-2">
+					<li><strong>Credits:</strong> {{ course.credits }}</li>
+					<li><strong>Hours:</strong> {{ course.hours }}</li>
+				</ul>
+				<a 
+					class="text-blue-700 underline"
+					href="{{ course.grades_url }}" 
+					target="_blank" 
+					rel="noopener noreferrer"
+				>
+					View Historical Averages for {{ course.code }}
+				</a>
+			</div>
+			{% endfor %}
+
+		</div>
+
+	</div>
 </body>
 
 </html>
