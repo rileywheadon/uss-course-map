@@ -28,16 +28,13 @@
 	<!-- Program selection buttons styled with TailwindCSS and Alpine.js -->
 	<div 
 		id="program-buttons" 
-		x-data="{ activeProgram: null }"
-		data-programs='{{ programs | tojson }}' 
 		class="flex flex-col md:block"
+		data-programs='{{ programs | tojson }}' 
 	>
 		{% for program in programs %}
 			<div 
-				class="rounded-full py-1 px-4 mx-[0.5] my-1 inline-block text-sm cursor-pointer program-button"
+				class="program-button rounded-full py-1 px-4 mx-[0.5] my-1 inline-block text-sm cursor-pointer bg-blue-200 hover:bg-blue-300 text-gray-900"
 				data-program="{{ program.program }}"
-				:class="activeProgram === '{{ program.program }}' ? 'bg-blue-800 text-white' : 'hover:bg-blue-300 bg-blue-200 text-gray-900'"
-				@click="activeProgram = '{{ program.program }}'"
 			>
 				{{program.program}}
 			</div>
